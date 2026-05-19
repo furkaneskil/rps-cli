@@ -9,13 +9,23 @@ def check_connection(sock):
             if not data:
                 print("\nServer shut down. Game over.")
                 os._exit(0)
+            
+            # Sunucudan gelen oyun sonucunu ekrana yazdır (flush=True ile anında bastırıyoruz)
+            print(f"{data.decode()}\n-> ", end="", flush=True)
         except Exception:
             print("\n Connection lost. Game over.")
             os._exit(0)
 
 def rps_client():
-    host = socket.gethostname()
-    port = 5002
+    # enter the ngrok address to set server
+    address = input("Enter the server address (localhost or 0.tcp.eu.ngrok.io:15234): ")
+    
+    if ":" in address:
+        host, port_str = address.split(":")
+        port = int(port_str)
+    else:
+        host = address
+        port = 5002
 
     client_socket = socket.socket()
     client_socket.connect((host, port))
@@ -45,4 +55,8 @@ def rps_client():
             print("Not one of the valid options.")
 
 if __name__ == '__main__':
-    rps_client()
+    try:
+        rps_client()
+    except KeyboardInterrupt:
+        print("\nGame exited by user.")
+        os._exit(0)
