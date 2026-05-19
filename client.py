@@ -10,7 +10,6 @@ def check_connection(sock):
                 print("\nServer shut down. Game over.")
                 os._exit(0)
             
-            # Sunucudan gelen oyun sonucunu ekrana yazdır (flush=True ile anında bastırıyoruz)
             print(f"{data.decode()}\n-> ", end="", flush=True)
         except Exception:
             print("\n Connection lost. Game over.")
@@ -20,6 +19,10 @@ def rps_client():
     # enter the ngrok address to set server
     address = input("Enter the server address (localhost or 0.tcp.eu.ngrok.io:15234): ")
     
+    # If address starts with "tcp://" slice it
+    if address.startswith("tcp://"):
+        address = address[6:]
+
     if ":" in address:
         host, port_str = address.split(":")
         port = int(port_str)
