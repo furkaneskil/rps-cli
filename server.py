@@ -1,5 +1,6 @@
 import socket
 import threading
+import os
 
 game_loop = True
 client_connections = []
@@ -95,8 +96,8 @@ def handle_client(conn, addr):
 
 def rps_server():
     global server_socket, client_connections, players
-    # host IP address as host name
-    host = socket.gethostname()
+    # 0.0.0.0 yaparak sunucunun localhost, LAN ve ngrok üzerinden gelen bağlantıları dinlemesini sağlıyoruz
+    host = '0.0.0.0'
     port = 5002
 
     # socket instance (default parameters: AF_INET -> IPv4, SOCK_STREAM -> TCP)
@@ -124,4 +125,8 @@ def rps_server():
 
 
 if __name__ == '__main__':
-    rps_server()
+    try:
+        rps_server()
+    except KeyboardInterrupt:
+        print("\nServer shut down by user.")
+        os._exit(0)
